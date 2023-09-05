@@ -23,6 +23,7 @@ public class UserServiceImpl implements UserService{
     @Override
     public List<Response> allUser() {
         List<User>usersList=userRepo.findAll();
+
         List<Response>response=new ArrayList<>();
 
         for (User user: usersList) {
@@ -60,6 +61,7 @@ public class UserServiceImpl implements UserService{
                     .responseMessage(ResponseUtil.USER_UPDATE_MESSAGE)
                     .data(String.valueOf(Data.builder()
                             .email(existingUser.getEmail())
+                            .username(existingUser.getUsername())
                             .accountName(existingUser.getFirstName() + " " + existingUser.getLastName())
                             .build()))
                     .build();

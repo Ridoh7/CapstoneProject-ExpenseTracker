@@ -30,7 +30,6 @@ public class UserController {
         } else if (response.getResponseCode().equals(ResponseUtil.USER_NOT_FOUND_CODE)) {
             return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
         } else {
-            // Handle other error cases if needed
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
     }
