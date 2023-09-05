@@ -1,9 +1,6 @@
 package com.Ridoh.ExpenseTrackerApplication.DTO;
 
 import com.Ridoh.ExpenseTrackerApplication.Entity.Category;
-import com.Ridoh.ExpenseTrackerApplication.Entity.User;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

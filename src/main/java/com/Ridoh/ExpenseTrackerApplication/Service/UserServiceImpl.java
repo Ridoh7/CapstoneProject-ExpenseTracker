@@ -64,7 +64,7 @@ public class UserServiceImpl implements UserService{
                             .build()))
                     .build();
         } else {
-            // User with the provided account number does not exist
+
             return Response.builder()
                     .responseCode(ResponseUtil.USER_NOT_FOUND_CODE)
                     .responseMessage(ResponseUtil.USERID_NOT_FOUND_MESSAGE)

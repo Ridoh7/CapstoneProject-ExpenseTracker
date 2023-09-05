@@ -20,10 +20,10 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PutMapping("/{accountNumber}")
-    public ResponseEntity<Response> updateUser(@PathVariable String accountNumber,
+    @PutMapping("username")
+    public ResponseEntity<Response> updateUser(String username,
                                                @RequestBody UserRequest userRequest) {
-        Response response = userService.updateUser(accountNumber, userRequest);
+        Response response = userService.updateUser(username, userRequest);
 
         if (response.getResponseCode().equals(ResponseUtil.USER_SUCCESS_CODE)) {
             return new ResponseEntity<>(response, HttpStatus.OK);
