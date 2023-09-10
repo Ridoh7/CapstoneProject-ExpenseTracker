@@ -7,6 +7,7 @@ import com.Ridoh.ExpenseTrackerApplication.Entity.Category;
 import com.Ridoh.ExpenseTrackerApplication.Entity.User;
 import com.Ridoh.ExpenseTrackerApplication.Repository.BudgetRepository;
 import com.Ridoh.ExpenseTrackerApplication.Repository.CategoryRepository;
+import com.Ridoh.ExpenseTrackerApplication.Repository.ExpenseRepository;
 import com.Ridoh.ExpenseTrackerApplication.Repository.UserRepo;
 import com.Ridoh.ExpenseTrackerApplication.Util.ResponseUtil;
 import jakarta.persistence.PersistenceException;
@@ -25,8 +26,10 @@ public class BudgetServiceImpl implements BudgetService {
     private final UserRepo userRepo;
     private final CategoryRepository categoryRepository;
 
+
     @Autowired
-    public BudgetServiceImpl(BudgetRepository budgetRepository, UserRepo userRepo, UserRepo userRepo1, CategoryRepository categoryRepository) {
+    public BudgetServiceImpl(BudgetRepository budgetRepository, UserRepo userRepo, UserRepo userRepo1,
+                             CategoryRepository categoryRepository) {
         this.budgetRepository = budgetRepository;
         this.userRepo = userRepo1;
         this.categoryRepository = categoryRepository;
@@ -68,8 +71,6 @@ public class BudgetServiceImpl implements BudgetService {
                 .amount(budgetList.getAmount())
                 .build()).collect(Collectors.toList());
         return budget;
-
-//        return budgetRepository.findByCategoryId(category.getId());
     }
 
 
@@ -87,9 +88,6 @@ public class BudgetServiceImpl implements BudgetService {
     public List<Budget> getBudgetsByCategoryUserAndCategoryExpensesDateBetween(User user, Date startDate, Date endDate) {
         return budgetRepository.findByCategoryUserAndCategoryExpensesDateBetween(user, startDate, endDate);
     }
-
-
-//    private static final Logger logger = LoggerFactory.getLogger(BudgetServiceImpl.class);
 
 
     @Override

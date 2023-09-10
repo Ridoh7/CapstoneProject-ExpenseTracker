@@ -15,7 +15,15 @@ public class ResponseUtil {
     public static final String CATEGORY_SUCCESS_MESSAGE="Category successfully created";
     public static final String EXPENSE_SUCCESS_MESSAGE="Expense successfully created";
     public static final String USER_UPDATE_MESSAGE="User successfully Updated";
+    public static final String USER_FETCH_LIST_MESSAGE="User successfully fetched";
+    public static final String USER_FETCH_LIST_CODE="009";
     public static final String USER_ID_NOT_FOUND_CODE="003";
     public static final String USER_NOT_FOUND_CODE="007";
+    public static final String USER_ID_FOUND_CODE="010";
+    public static final String BUDGET_NOT_FOUND_CODE="011";
+    public static final String BUDGET_NOT_FOUND_MESSAGE="Budget not found for user in this category";
     public static final String USERID_NOT_FOUND_MESSAGE="User id does not exist";
+    public static final String USERID_FOUND_MESSAGE="User id exist";
+    public static final String EXPENSE_WARNING_CODE="008";
+    public static final String EXPENSE_WARNING_MESSAGE="Expense amount exceeds remaining budget for the category";
 }

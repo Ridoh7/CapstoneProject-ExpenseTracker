@@ -2,9 +2,11 @@ package com.Ridoh.ExpenseTrackerApplication.Service;
 
 import com.Ridoh.ExpenseTrackerApplication.DTO.ExpenseRequest;
 import com.Ridoh.ExpenseTrackerApplication.DTO.Response;
+import com.Ridoh.ExpenseTrackerApplication.Entity.Budget;
 import com.Ridoh.ExpenseTrackerApplication.Entity.Category;
 import com.Ridoh.ExpenseTrackerApplication.Entity.Expense;
 import com.Ridoh.ExpenseTrackerApplication.Entity.User;
+import com.Ridoh.ExpenseTrackerApplication.Repository.BudgetRepository;
 import com.Ridoh.ExpenseTrackerApplication.Repository.CategoryRepository;
 import com.Ridoh.ExpenseTrackerApplication.Repository.ExpenseRepository;
 import com.Ridoh.ExpenseTrackerApplication.Repository.UserRepo;
@@ -18,18 +20,19 @@ import java.util.List;
 
 @Service
 public class ExpenseServiceImpl implements ExpenseService {
-
     private final ExpenseRepository expenseRepository;
-
     private final UserRepo userRepo;
-
     private final CategoryRepository categoryRepository;
+    private final BudgetServiceImpl budgetService;
+    private final BudgetRepository budgetRepository;
 
     @Autowired
-    public ExpenseServiceImpl(ExpenseRepository expenseRepository, UserRepo userRepo, CategoryRepository categoryRepository) {
+    public ExpenseServiceImpl(ExpenseRepository expenseRepository, UserRepo userRepo, CategoryRepository categoryRepository, BudgetServiceImpl budgetService, BudgetRepository budgetRepository) {
         this.expenseRepository = expenseRepository;
         this.userRepo = userRepo;
         this.categoryRepository = categoryRepository;
+        this.budgetService = budgetService;
+        this.budgetRepository = budgetRepository;
     }
 
     @Override
@@ -42,6 +45,27 @@ public class ExpenseServiceImpl implements ExpenseService {
                 .orElseThrow(() -> new RuntimeException("Predefined category not found"));
 
         String categoryDescription= predefinedCategory.getDescription();
+
+        Budget budget = budgetRepository.findByCategoryAndUser(predefinedCategory, user);
+        if (budget == null) {
+            return Response.builder()
+                    .responseCode(ResponseUtil.BUDGET_NOT_FOUND_CODE)
+                    .responseMessage(ResponseUtil.BUDGET_NOT_FOUND_MESSAGE)
+                    .build();
+        }
+
+        Double remainingBudget= budgetService.getTotalAmountBudgetedByUser(user);
+
+        if (expenseRequest.getAmount()>remainingBudget){
+            return Response.builder()
+                    .responseCode(ResponseUtil.EXPENSE_WARNING_CODE)
+                    .responseMessage(ResponseUtil.EXPENSE_WARNING_MESSAGE)
+                    .build();
+        }
+
+        double newRemainingBudget= remainingBudget-expenseRequest.getAmount();
+        budget.setAmount(newRemainingBudget);
+        budgetRepository.save(budget);
 
         Expense expense = Expense.builder()
                 .amount(expenseRequest.getAmount())

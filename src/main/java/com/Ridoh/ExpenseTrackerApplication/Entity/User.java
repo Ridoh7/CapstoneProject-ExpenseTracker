@@ -1,5 +1,7 @@
 package com.Ridoh.ExpenseTrackerApplication.Entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
@@ -36,6 +38,8 @@ public class User {
     @UpdateTimestamp
     private String modifiedAt;
 
+    @JsonIgnore
+    @JsonBackReference
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
@@ -43,6 +47,8 @@ public class User {
     )
     private Set<Role> roles = new HashSet<>();
 
+    @JsonBackReference
+    @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Expense> expenses;
 }

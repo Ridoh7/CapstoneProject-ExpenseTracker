@@ -34,5 +34,7 @@ public interface BudgetRepository extends JpaRepository<Budget, Long> {
     //sumAmountByUser: Calculates the total amount of budget for a specific user.
     @Query("SELECT SUM(b.amount) FROM Budget b WHERE b.user = :user")
     Double sumBudgetedAmountByUser(@Param("user") User user);
+
+    Budget findByCategoryAndUser(Category predefinedCategory, User user);
 }
 

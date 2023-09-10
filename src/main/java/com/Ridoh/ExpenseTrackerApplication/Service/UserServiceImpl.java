@@ -28,10 +28,11 @@ public class UserServiceImpl implements UserService{
 
         for (User user: usersList) {
             response.add(Response.builder()
-                    .responseCode(ResponseUtil.USER_SUCCESS_CODE)
-                    .responseMessage(ResponseUtil.USER_SUCCESS_MESSAGE)
+                    .responseCode(ResponseUtil.USER_FETCH_LIST_CODE)
+                    .responseMessage(ResponseUtil.USER_FETCH_LIST_MESSAGE)
                     .data(String.valueOf(Data.builder()
                             .email(user.getEmail())
+                            .username(user.getUsername())
                             .accountName(user.getFirstName()+" "+user.getLastName())
                             .build()))
                     .build());
@@ -87,10 +88,12 @@ public class UserServiceImpl implements UserService{
         }
         User user=userRepo.findById(userId).get();
         return new ResponseEntity<>(Response.builder()
-                .responseCode(ResponseUtil.USER_EXIST_CODE)
-                .responseMessage(ResponseUtil.USER_EXIST_MESSAGE)
+                .responseCode(ResponseUtil.USER_ID_FOUND_CODE)
+                .responseMessage(ResponseUtil.USERID_FOUND_MESSAGE)
                 .data(String.valueOf(Data.builder()
                         .accountName(user.getFirstName()+" "+user.getLastName())
+                        .username(user.getUsername())
+                        .email(user.getEmail())
                         .build()))
                 .build(),HttpStatus.OK);
     }

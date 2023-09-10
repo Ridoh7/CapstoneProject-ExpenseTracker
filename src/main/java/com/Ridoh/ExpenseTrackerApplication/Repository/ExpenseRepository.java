@@ -35,8 +35,4 @@ public interface ExpenseRepository extends JpaRepository<Expense, Long> {
     //sumAmountByUser: Calculates the total amount of expenses for a specific user.
     @Query("SELECT SUM(e.amount) FROM Expense e WHERE e.user = :user")
     Double sumExpensesAmountByUser(@Param("user") User user);
-
-
-
-
 }
