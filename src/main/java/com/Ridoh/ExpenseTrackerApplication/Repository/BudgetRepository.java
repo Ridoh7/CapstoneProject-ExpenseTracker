@@ -8,12 +8,15 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface BudgetRepository extends JpaRepository<Budget, Long> {
 
-    // findByCategory: Retrieves a list of budgets for a specific category.
-    List<Budget> findByCategory(Category category);
+    Budget findByUserAndCategory(User user, Category category);
+
+    Optional<Budget> findById(Long id);
+
 
     // findByCategory: Retrieves a list of budgets for a specific category.
     List<Budget> findByCategoryAndAmountGreaterThan(Category category, Double amount);

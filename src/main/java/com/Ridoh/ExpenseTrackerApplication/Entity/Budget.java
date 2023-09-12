@@ -1,9 +1,10 @@
 package com.Ridoh.ExpenseTrackerApplication.Entity;
 
-import com.Ridoh.ExpenseTrackerApplication.PredefinedCategoryInitializer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 @Entity
 @Getter
@@ -20,6 +21,12 @@ public class Budget {
     private Double amount;
 
     private String categoryDescription;
+
+    @CreationTimestamp
+    private String createdAt;
+
+    @UpdateTimestamp
+    private String modifiedAt;
 
     @ManyToOne
     @JsonIgnore

@@ -39,7 +39,6 @@ public class User {
     private String modifiedAt;
 
     @JsonIgnore
-    @JsonBackReference
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),
@@ -47,7 +46,6 @@ public class User {
     )
     private Set<Role> roles = new HashSet<>();
 
-    @JsonBackReference
     @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Expense> expenses;

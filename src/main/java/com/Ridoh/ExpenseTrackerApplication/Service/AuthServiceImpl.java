@@ -31,11 +31,10 @@ public class AuthServiceImpl implements AuthService {
 
     @Autowired
     public AuthServiceImpl(UserRepo userRepo, RoleRepository roleRepository, AuthenticationManager authenticationManager,
-                           AuthenticationManager authenticationManager1, CustomUserDetailsService customUserDetailsService,
                            CategoryService categoryService, JwtTokenProvider jwtTokenProvider, PasswordEncoder passwordEncoder) {
         this.userRepo = userRepo;
         this.roleRepository = roleRepository;
-        this.authenticationManager = authenticationManager1;
+        this.authenticationManager = authenticationManager;
         this.categoryService = categoryService;
         this.jwtTokenProvider = jwtTokenProvider;
         this.passwordEncoder = passwordEncoder;

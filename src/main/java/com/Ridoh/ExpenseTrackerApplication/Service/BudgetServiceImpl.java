@@ -1,13 +1,13 @@
 package com.Ridoh.ExpenseTrackerApplication.Service;
 import com.Ridoh.ExpenseTrackerApplication.DTO.BudgetRequest;
 import com.Ridoh.ExpenseTrackerApplication.DTO.BudgetResponse;
+import com.Ridoh.ExpenseTrackerApplication.DTO.BudgetUpdateRequest;
 import com.Ridoh.ExpenseTrackerApplication.DTO.Response;
 import com.Ridoh.ExpenseTrackerApplication.Entity.Budget;
 import com.Ridoh.ExpenseTrackerApplication.Entity.Category;
 import com.Ridoh.ExpenseTrackerApplication.Entity.User;
 import com.Ridoh.ExpenseTrackerApplication.Repository.BudgetRepository;
 import com.Ridoh.ExpenseTrackerApplication.Repository.CategoryRepository;
-import com.Ridoh.ExpenseTrackerApplication.Repository.ExpenseRepository;
 import com.Ridoh.ExpenseTrackerApplication.Repository.UserRepo;
 import com.Ridoh.ExpenseTrackerApplication.Util.ResponseUtil;
 import jakarta.persistence.PersistenceException;
@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -36,12 +37,22 @@ public class BudgetServiceImpl implements BudgetService {
     }
 
     @Override
-    public Response createBudget(BudgetRequest budgetRequest) throws ChangeSetPersister.NotFoundException {
+    public BudgetResponse createBudget(BudgetRequest budgetRequest) throws ChangeSetPersister.NotFoundException {
         User user = userRepo.findById(budgetRequest.getUserId())
                 .orElseThrow(ChangeSetPersister.NotFoundException::new);
 
         Category predefinedCategory = categoryRepository.findById(budgetRequest.getCategoryId())
                 .orElseThrow(()-> new RuntimeException("Predefined Category not found"));
+
+        Budget existingBudget =budgetRepository.findByUserAndCategory(user, predefinedCategory );
+        if (existingBudget!=null){
+            return BudgetResponse.builder()
+                    .responseCode(ResponseUtil.BUDGET_EXIST_CODE)
+                    .responseMessage(ResponseUtil.BUDGET_EXIST_MESSAGE)
+                    .userId(budgetRequest.getUserId())
+                    .category(budgetRequest.getCategoryId())
+                    .amount(budgetRequest.getAmount()).build();
+        }
 
         String categoryDescription= predefinedCategory.getDescription();
 
@@ -54,11 +65,48 @@ public class BudgetServiceImpl implements BudgetService {
 
         Budget savedBudget = budgetRepository.save(budget);
 
-        return Response.builder()
+        return BudgetResponse.builder()
                 .responseCode(ResponseUtil.BUDGET_SUCCESS_CODE)
                 .responseMessage(ResponseUtil.BUDGET_SUCCESS_MESSAGE)
+                .amount(budgetRequest.getAmount())
+                .category(budgetRequest.getCategoryId())
+                .userId(budgetRequest.getUserId())
                 .build();
     }
+
+    @Override
+    public BudgetResponse updateBudget(BudgetUpdateRequest budgetUpdateRequest) throws ChangeSetPersister.NotFoundException {
+        User user = userRepo.findById(budgetUpdateRequest.getUserId())
+                .orElseThrow(ChangeSetPersister.NotFoundException::new);
+
+        Category predefinedCategory = categoryRepository.findById(budgetUpdateRequest.getCategoryId())
+                .orElseThrow(() -> new RuntimeException("Predefined Category not found"));
+
+        Budget existingBudget = budgetRepository.findByUserAndCategory(user, predefinedCategory);
+
+        if (existingBudget == null) {
+            return BudgetResponse.builder()
+                    .responseCode(ResponseUtil.BUDGET_NOT_FOUND_CODE)
+                    .responseMessage(ResponseUtil.BUDGET_NOT_FOUND_MESSAGE)
+                    .build();
+        }
+
+        // Update the existing budget with the new amount
+        Double currentAmount = existingBudget.getAmount();
+        Double newAmount = budgetUpdateRequest.getNewAmount();
+        existingBudget.setAmount(currentAmount + newAmount);
+        budgetRepository.save(existingBudget);
+
+        return BudgetResponse.builder()
+                .responseCode(ResponseUtil.BUDGET_UPDATE_CODE)
+                .responseMessage(ResponseUtil.BUDGET_UPDATE_MESSAGE)
+                .amount(existingBudget.getAmount())
+                .category(existingBudget.getCategory().getId())
+                .userId(existingBudget.getUser().getId())
+                .build();
+    }
+
+
 
 
     @Override
@@ -66,7 +114,7 @@ public class BudgetServiceImpl implements BudgetService {
         Category category = categoryRepository.findById(categoryId).orElseThrow(PersistenceException::new);
 
         List<BudgetResponse> budget = budgetRepository.findByCategoryId(categoryId).stream().map(budgetList->BudgetResponse.builder()
-                .category(budgetList.getCategory())
+                .category(budgetList.getCategory().getId())
                 .userId(budgetList.getId())
                 .amount(budgetList.getAmount())
                 .build()).collect(Collectors.toList());

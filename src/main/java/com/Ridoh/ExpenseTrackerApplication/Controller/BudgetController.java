@@ -1,7 +1,7 @@
 package com.Ridoh.ExpenseTrackerApplication.Controller;
 import com.Ridoh.ExpenseTrackerApplication.DTO.BudgetRequest;
 import com.Ridoh.ExpenseTrackerApplication.DTO.BudgetResponse;
-import com.Ridoh.ExpenseTrackerApplication.DTO.Response;
+import com.Ridoh.ExpenseTrackerApplication.DTO.BudgetUpdateRequest;
 import com.Ridoh.ExpenseTrackerApplication.Entity.Budget;
 import com.Ridoh.ExpenseTrackerApplication.Entity.Category;
 import com.Ridoh.ExpenseTrackerApplication.Entity.User;
@@ -9,6 +9,7 @@ import com.Ridoh.ExpenseTrackerApplication.Service.BudgetService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,16 +28,25 @@ public class BudgetController {
     }
 
     @PostMapping("/createBudget")
-    public ResponseEntity<Response> createBudget(@RequestBody BudgetRequest budgetRequest) throws ChangeSetPersister.NotFoundException {
-        Response createdBudget = budgetService.createBudget(budgetRequest);
+    public ResponseEntity<BudgetResponse> createBudget(@RequestBody BudgetRequest budgetRequest) throws ChangeSetPersister.NotFoundException {
+        BudgetResponse createdBudget = budgetService.createBudget(budgetRequest);
         return ResponseEntity.ok(createdBudget);
     }
 
+    @PutMapping("/update-budget")
+    public ResponseEntity<BudgetResponse> updateBudget(@RequestBody BudgetUpdateRequest budgetUpdateRequest) {
+        try {
+            BudgetResponse response = budgetService.updateBudget(budgetUpdateRequest);
+            return ResponseEntity.ok(response);
+        } catch (ChangeSetPersister.NotFoundException e) {
+            // Handle not found exception
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        }
+    }
+
+
     @GetMapping("/category/{categoryId}")
     public ResponseEntity<List<BudgetResponse>> getBudgetsByCategory(@PathVariable("categoryId") Long categoryId)  {
-//        Category category = new Category();
-//        category.setId(categoryId);
-//        List<BudgetResponse> budgets = budgetService.getBudgetsByCategory(category.getId());
         return ResponseEntity.ok(budgetService.getBudgetsByCategory(categoryId));
     }
 

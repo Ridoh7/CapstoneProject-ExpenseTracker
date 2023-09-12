@@ -13,8 +13,10 @@ import lombok.NoArgsConstructor;
 public class BudgetResponse {
 
     private Double amount;
-    private Category category;
+    private Long category;
     private Long userId;
+    private String responseCode;
+    private String responseMessage;
 
 
 }

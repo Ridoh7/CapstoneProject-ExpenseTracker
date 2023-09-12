@@ -2,6 +2,7 @@ package com.Ridoh.ExpenseTrackerApplication.Service;
 
 import com.Ridoh.ExpenseTrackerApplication.DTO.BudgetRequest;
 import com.Ridoh.ExpenseTrackerApplication.DTO.BudgetResponse;
+import com.Ridoh.ExpenseTrackerApplication.DTO.BudgetUpdateRequest;
 import com.Ridoh.ExpenseTrackerApplication.DTO.Response;
 import com.Ridoh.ExpenseTrackerApplication.Entity.Budget;
 import com.Ridoh.ExpenseTrackerApplication.Entity.Category;
@@ -13,7 +14,9 @@ import java.util.List;
 
 public interface BudgetService {
 
-    Response createBudget(BudgetRequest budgetRequest) throws ChangeSetPersister.NotFoundException;
+    BudgetResponse createBudget(BudgetRequest budgetRequest) throws ChangeSetPersister.NotFoundException;
+
+    BudgetResponse updateBudget(BudgetUpdateRequest budgetUpdateRequest) throws ChangeSetPersister.NotFoundException;
 
     List<BudgetResponse> getBudgetsByCategory(Long categoryId);
 
