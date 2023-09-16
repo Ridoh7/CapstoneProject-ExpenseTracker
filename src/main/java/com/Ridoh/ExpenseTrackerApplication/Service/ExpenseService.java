@@ -5,7 +5,6 @@ import com.Ridoh.ExpenseTrackerApplication.Entity.Category;
 import com.Ridoh.ExpenseTrackerApplication.Entity.Expense;
 import com.Ridoh.ExpenseTrackerApplication.Entity.User;
 import org.springframework.data.crossstore.ChangeSetPersister;
-import org.springframework.security.core.Authentication;
 
 import java.util.Date;
 import java.util.List;
@@ -15,7 +14,6 @@ public interface ExpenseService {
     Response createExpense(ExpenseRequest expenseRequest) throws ChangeSetPersister.NotFoundException;
 
     List<Expense> getExpensesByUser(User user);
-
     List<Expense> getExpensesByCategory(Category category);
 
     List<Expense> getExpensesByUserAndCategory(User user, Category category);
@@ -27,7 +25,5 @@ public interface ExpenseService {
     List<Expense> getExpensesByUserOrderByDateDesc(User user);
 
     Double getTotalAmountSpentByUser(User user);
-
-
 }
 

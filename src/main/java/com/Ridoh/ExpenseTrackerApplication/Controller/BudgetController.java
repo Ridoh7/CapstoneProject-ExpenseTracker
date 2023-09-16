@@ -33,7 +33,7 @@ public class BudgetController {
         return ResponseEntity.ok(createdBudget);
     }
 
-    @PutMapping("/update-budget")
+    @PutMapping("/updateBudget/category/{categoryId}/user/{userId}")
     public ResponseEntity<BudgetResponse> updateBudget(@RequestBody BudgetUpdateRequest budgetUpdateRequest) {
         try {
             BudgetResponse response = budgetService.updateBudget(budgetUpdateRequest);

@@ -1,13 +1,16 @@
 package com.Ridoh.ExpenseTrackerApplication.Service;
+
 import com.Ridoh.ExpenseTrackerApplication.DTO.*;
+import com.Ridoh.ExpenseTrackerApplication.Email.Service.EmailService;
+import com.Ridoh.ExpenseTrackerApplication.Email.dto.EmailDetails;
 import com.Ridoh.ExpenseTrackerApplication.Entity.Category;
 import com.Ridoh.ExpenseTrackerApplication.Entity.Role;
 import com.Ridoh.ExpenseTrackerApplication.Entity.User;
 import com.Ridoh.ExpenseTrackerApplication.Repository.RoleRepository;
 import com.Ridoh.ExpenseTrackerApplication.Repository.UserRepo;
-import com.Ridoh.ExpenseTrackerApplication.Security.CustomUserDetailsService;
 import com.Ridoh.ExpenseTrackerApplication.Security.JwtTokenProvider;
 import com.Ridoh.ExpenseTrackerApplication.Util.ResponseUtil;
+import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,7 +19,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -28,16 +33,18 @@ public class AuthServiceImpl implements AuthService {
     private final CategoryService categoryService;
     private final JwtTokenProvider jwtTokenProvider;
     private final PasswordEncoder passwordEncoder;
+    private final EmailService emailService;
 
     @Autowired
     public AuthServiceImpl(UserRepo userRepo, RoleRepository roleRepository, AuthenticationManager authenticationManager,
-                           CategoryService categoryService, JwtTokenProvider jwtTokenProvider, PasswordEncoder passwordEncoder) {
+                           CategoryService categoryService, JwtTokenProvider jwtTokenProvider, PasswordEncoder passwordEncoder, EntityManager entityManager, EmailService emailService) {
         this.userRepo = userRepo;
         this.roleRepository = roleRepository;
         this.authenticationManager = authenticationManager;
         this.categoryService = categoryService;
         this.jwtTokenProvider = jwtTokenProvider;
         this.passwordEncoder = passwordEncoder;
+        this.emailService = emailService;
     }
 
     @Override
@@ -58,7 +65,7 @@ public class AuthServiceImpl implements AuthService {
                 .predefinedCategories(categoryService.getAllPredefinedCategories())
                 .build();
     }
-
+    @Transactional
     @Override
     public Response register(RegisterDto registerDto) {
         boolean isUserExist = userRepo.existsByEmailOrUsername(registerDto.getEmail(), registerDto.getUsername());
@@ -73,6 +80,8 @@ public class AuthServiceImpl implements AuthService {
 
         Role role = roleRepository.findByRoleName("USER").orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
 
+//        role=entityManager.merge(role);
+
         User user = User.builder()
                 .username(registerDto.getUsername())
                 .email(registerDto.getEmail())
@@ -81,6 +90,20 @@ public class AuthServiceImpl implements AuthService {
                 .build();
 
         User savedUser = userRepo.save(user);
+
+        EmailDetails emailDetails= EmailDetails.builder()
+                .recipient(user.getEmail())
+                .subject("Expense Tracker Profile Creation")
+                .messageBody("Dear " + user.getUsername()+ ": Your profile has been successfully created.\n Your profile details are: " +
+                        "\nUsername: " + user.getUsername()+" "+
+                        "\nEmail: " + user.getEmail()+" " +
+                        "\nUser ID: " + user.getId()+" "+
+                        "\nThank you for using Expense Tracker Application that helps in managing your budget and expenses")
+                .build();
+
+        emailService.sendSimpleEmail(emailDetails);
+
+
 
         return Response.builder()
                 .responseCode(ResponseUtil.USER_SUCCESS_CODE)
@@ -92,6 +115,7 @@ public class AuthServiceImpl implements AuthService {
                 .build();
     }
 
+    @Transactional
     @Override
     public Response registerAdmin(AdminDto adminDto) {
         boolean isUserExist=userRepo.existsByEmailOrUsername(adminDto.getEmail(), adminDto.getUsername());
@@ -114,6 +138,19 @@ public class AuthServiceImpl implements AuthService {
                 .build();
 
         User savedAdmin=userRepo.save(user);
+
+        EmailDetails emailDetails= EmailDetails.builder()
+                .recipient(user.getEmail())
+                .subject("Expense Tracker Profile Creation")
+                .messageBody("Dear " + user.getUsername()+ ": Your profile has been successfully created.\n Your profile details are: " +
+                        "\nUsername: " + user.getUsername()+" "+
+                        "\nEmail: " + user.getEmail()+" " +
+                        "\nUser ID: " + user.getId()+" "+
+                        "\nThank you for using Expense Tracker Application that helps in managing your budget and expenses")
+                .build();
+
+        emailService.sendSimpleEmail(emailDetails);
+
 
         return Response.builder()
                 .responseCode(ResponseUtil.USER_SUCCESS_CODE)

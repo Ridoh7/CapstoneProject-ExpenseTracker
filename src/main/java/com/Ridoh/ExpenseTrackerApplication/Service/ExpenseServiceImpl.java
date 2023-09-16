@@ -1,6 +1,8 @@
 package com.Ridoh.ExpenseTrackerApplication.Service;
 import com.Ridoh.ExpenseTrackerApplication.DTO.ExpenseRequest;
 import com.Ridoh.ExpenseTrackerApplication.DTO.Response;
+import com.Ridoh.ExpenseTrackerApplication.Email.Service.EmailService;
+import com.Ridoh.ExpenseTrackerApplication.Email.dto.EmailDetails;
 import com.Ridoh.ExpenseTrackerApplication.Entity.Budget;
 import com.Ridoh.ExpenseTrackerApplication.Entity.Category;
 import com.Ridoh.ExpenseTrackerApplication.Entity.Expense;
@@ -23,15 +25,17 @@ public class ExpenseServiceImpl implements ExpenseService {
     private final CategoryRepository categoryRepository;
     private final BudgetServiceImpl budgetService;
     private final BudgetRepository budgetRepository;
+    private final EmailService emailService;
 
     @Autowired
     public ExpenseServiceImpl(ExpenseRepository expenseRepository, UserRepo userRepo, CategoryRepository
-            categoryRepository, BudgetServiceImpl budgetService, BudgetRepository budgetRepository) {
+            categoryRepository, BudgetServiceImpl budgetService, BudgetRepository budgetRepository, EmailService emailService) {
         this.expenseRepository = expenseRepository;
         this.userRepo = userRepo;
         this.categoryRepository = categoryRepository;
         this.budgetService = budgetService;
         this.budgetRepository = budgetRepository;
+        this.emailService = emailService;
     }
 
     @Override
@@ -74,6 +78,18 @@ public class ExpenseServiceImpl implements ExpenseService {
                 .build();
 
         expenseRepository.save(expense);
+        EmailDetails emailDetails= EmailDetails.builder()
+                .recipient(user.getEmail())
+                .subject("Expense Creation")
+                .messageBody("Dear " + user.getUsername()+ ": Your expense has been successfully created.\n Your details are: " +
+                        "\nExpense Amount: " + expense.getAmount()+" "+
+                        "\nExpense Description: " + budget.getCategoryDescription()+" " +
+                        "\nBudget categoryId: " + expenseRequest.getCategoryId()+" "+
+                        "\nThank you for using Expense Tracker Application that helps in managing your budget and expenses")
+                .build();
+
+        emailService.sendSimpleEmail(emailDetails);
+
 
         return Response.builder()
                 .responseCode(ResponseUtil.EXPENSE_SUCCESS_CODE)
@@ -83,8 +99,10 @@ public class ExpenseServiceImpl implements ExpenseService {
 
     @Override
     public List<Expense> getExpensesByUser(User user) {
-        return expenseRepository.findByUser(user);
-    }
+        List<Expense> expenses = expenseRepository.findByUser(user);
+
+       return expenseRepository.findByUser(user);
+   }
 
     @Override
     public List<Expense> getExpensesByCategory(Category category) {
@@ -97,8 +115,8 @@ public class ExpenseServiceImpl implements ExpenseService {
     }
 
     @Override
-    public List<Expense> getExpensesByUserAndDateRange(User user, Date startDate, Date endDate) {
-        return expenseRepository.findByUserAndDateBetween(user, startDate, endDate);
+    public List<Expense> getExpensesByUserAndDateRange(User userId, Date startDate, Date endDate) {
+        return expenseRepository.findByUserAndDateBetween(userId, startDate, endDate);
     }
 
     @Override

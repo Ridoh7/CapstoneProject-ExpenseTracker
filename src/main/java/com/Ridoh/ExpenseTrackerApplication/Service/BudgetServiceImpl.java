@@ -1,8 +1,10 @@
 package com.Ridoh.ExpenseTrackerApplication.Service;
+
 import com.Ridoh.ExpenseTrackerApplication.DTO.BudgetRequest;
 import com.Ridoh.ExpenseTrackerApplication.DTO.BudgetResponse;
 import com.Ridoh.ExpenseTrackerApplication.DTO.BudgetUpdateRequest;
-import com.Ridoh.ExpenseTrackerApplication.DTO.Response;
+import com.Ridoh.ExpenseTrackerApplication.Email.Service.EmailService;
+import com.Ridoh.ExpenseTrackerApplication.Email.dto.EmailDetails;
 import com.Ridoh.ExpenseTrackerApplication.Entity.Budget;
 import com.Ridoh.ExpenseTrackerApplication.Entity.Category;
 import com.Ridoh.ExpenseTrackerApplication.Entity.User;
@@ -17,7 +19,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 
@@ -26,6 +27,8 @@ public class BudgetServiceImpl implements BudgetService {
     private final BudgetRepository budgetRepository;
     private final UserRepo userRepo;
     private final CategoryRepository categoryRepository;
+    @Autowired
+    EmailService emailService;
 
 
     @Autowired
@@ -65,6 +68,17 @@ public class BudgetServiceImpl implements BudgetService {
 
         Budget savedBudget = budgetRepository.save(budget);
 
+        EmailDetails emailDetails= EmailDetails.builder()
+                .recipient(user.getEmail())
+                .subject("Expense Tracker Budget Creation")
+                .messageBody("Dear " + user.getUsername()+ ": Your budget has been successfully created.\n Your budget details are: " +
+                        "\nBalance: " + budget.getAmount()+" "+
+                        "\nBudget Description: " + budget.getCategoryDescription()+" " +
+                        "\nBudget categoryId: " + budgetRequest.getCategoryId())
+                .build();
+
+        emailService.sendSimpleEmail(emailDetails);
+
         return BudgetResponse.builder()
                 .responseCode(ResponseUtil.BUDGET_SUCCESS_CODE)
                 .responseMessage(ResponseUtil.BUDGET_SUCCESS_MESSAGE)
@@ -96,6 +110,18 @@ public class BudgetServiceImpl implements BudgetService {
         Double newAmount = budgetUpdateRequest.getNewAmount();
         existingBudget.setAmount(currentAmount + newAmount);
         budgetRepository.save(existingBudget);
+
+
+        EmailDetails emailDetails= EmailDetails.builder()
+                .recipient(user.getEmail())
+                .subject("Expense Tracker Budget Updating")
+                .messageBody("Dear " + user.getUsername()+ ":Your budget has been successfully updated.\n Your budget details are: " +
+                        "\nBalance: " + existingBudget.getAmount()+" "+
+                        "\nBudget Description: " + existingBudget.getCategoryDescription()+" " +
+                        "\nBudget categoryId: " + budgetUpdateRequest.getCategoryId())
+                .build();
+
+        emailService.sendSimpleEmail(emailDetails);
 
         return BudgetResponse.builder()
                 .responseCode(ResponseUtil.BUDGET_UPDATE_CODE)

@@ -70,7 +70,5 @@ public class CategoryController {
         List<Category> categories = categoryService.getCategoriesByBudgetsCategoryUser(user);
         return ResponseEntity.ok(categories);
     }
-
-    // Add more methods as needed
 }
 

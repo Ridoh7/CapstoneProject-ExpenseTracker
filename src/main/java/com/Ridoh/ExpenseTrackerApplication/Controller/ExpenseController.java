@@ -5,8 +5,10 @@ import com.Ridoh.ExpenseTrackerApplication.Entity.Category;
 import com.Ridoh.ExpenseTrackerApplication.Entity.Expense;
 import com.Ridoh.ExpenseTrackerApplication.Entity.User;
 import com.Ridoh.ExpenseTrackerApplication.Service.ExpenseService;
+import com.Ridoh.ExpenseTrackerApplication.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
@@ -19,10 +21,12 @@ import java.util.List;
 public class ExpenseController {
 
     private final ExpenseService expenseService;
+    private final UserService userService;
 
     @Autowired
-    public ExpenseController(ExpenseService expenseService) {
+    public ExpenseController(ExpenseService expenseService, UserService userService) {
         this.expenseService = expenseService;
+        this.userService = userService;
     }
 
     @PostMapping
@@ -37,7 +41,7 @@ public class ExpenseController {
         user.setId(userId);
         List<Expense> expenses = expenseService.getExpensesByUser(user);
         return ResponseEntity.ok(expenses);
-    }
+}
 
     @GetMapping("/category/{categoryId}")
     public ResponseEntity<List<Expense>> getExpensesByCategory(@PathVariable Long categoryId) {
@@ -64,14 +68,11 @@ public class ExpenseController {
 
     @GetMapping("/user/{userId}/date")
     public ResponseEntity<List<Expense>> getExpensesByUserAndDateRange(
-            @PathVariable Long userId,
+            @PathVariable User userId,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date startDate,
             @RequestParam @DateTimeFormat(pattern = "yyyy-MM-dd") Date endDate
     ) {
-        User user = new User();
-        user.setId(userId);
-
-        List<Expense> expenses = expenseService.getExpensesByUserAndDateRange(user, startDate, endDate);
+        List<Expense> expenses = expenseService.getExpensesByUserAndDateRange(userId, startDate, endDate);
         return ResponseEntity.ok(expenses);
     }
 

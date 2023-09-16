@@ -14,27 +14,11 @@ import java.util.Optional;
 public interface BudgetRepository extends JpaRepository<Budget, Long> {
 
     Budget findByUserAndCategory(User user, Category category);
-
-    Optional<Budget> findById(Long id);
-
-
-    // findByCategory: Retrieves a list of budgets for a specific category.
     List<Budget> findByCategoryAndAmountGreaterThan(Category category, Double amount);
-
-    // findByCategoryUser: Retrieves a list of budgets for categories associated with a specific user.
     List<Budget> findByCategoryUser(User user);
-
-    // findByCategoryAndAmountGreaterThan: Retrieves a list of budgets for a specific category with
-    // amounts greater than a specified value.
     List<Budget> findByCategoryUserAndCategoryExpensesDateBetween(User user, Date startDate, Date endDate);
-
-    //    findByCategoryUserOrderByAmountDesc: Retrieves a list of budgets for categories associated with a specific
-    //    user, ordered by amount in descending order.
     List<Budget> findByCategoryUserOrderByAmountDesc(User user);
-
     List<Budget> findByCategoryId(Long categoryId);
-
-    //sumAmountByUser: Calculates the total amount of budget for a specific user.
     @Query("SELECT SUM(b.amount) FROM Budget b WHERE b.user = :user")
     Double sumBudgetedAmountByUser(@Param("user") User user);
 

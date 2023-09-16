@@ -20,8 +20,8 @@ public class UserController {
         this.userService = userService;
     }
 
-    @PutMapping("username")
-    public ResponseEntity<Response> updateUser(String username,
+    @PutMapping("{username}")
+    public ResponseEntity<Response> updateUser(@PathVariable String username,
                                                @RequestBody UserRequest userRequest) {
         Response response = userService.updateUser(username, userRequest);
 
