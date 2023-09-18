@@ -66,10 +66,10 @@ public class UserServiceImpl implements UserService{
             EmailDetails emailDetails= EmailDetails.builder()
                     .recipient(existingUser.getEmail())
                     .subject("Expense Tracker Profile Update")
-                    .messageBody("Dear " + existingUser.getUsername()+ ": Your profile has been successfully created.\n Your budget details are: " +
+                    .messageBody("Dear " + existingUser.getUsername()+ ": Your profile has been successfully updated.\n Your details are: " +
                             "\nUsername: " + existingUser.getUsername()+" "+
                             "\nEmail: " + existingUser.getEmail()+" " +
-                            "\nAccount Name: " + existingUser.getFirstName() + existingUser.getLastName())
+                            "\nAccount Name: " + existingUser.getFirstName()+ " " + existingUser.getLastName())
                     .build();
 
             emailService.sendSimpleEmail(emailDetails);

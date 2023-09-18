@@ -13,5 +13,4 @@ public interface UserService {
     Response updateUser(String username, UserRequest userRequest);
     ResponseEntity<Response>fetchUser(Long userId);
     ResponseEntity<Response>nameEnquiry(String username, String email);
-
 }

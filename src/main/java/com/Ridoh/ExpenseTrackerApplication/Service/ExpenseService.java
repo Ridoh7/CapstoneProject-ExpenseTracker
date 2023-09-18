@@ -25,5 +25,7 @@ public interface ExpenseService {
     List<Expense> getExpensesByUserOrderByDateDesc(User user);
 
     Double getTotalAmountSpentByUser(User user);
+    Response deleteExpenseById(Long expenseId);
+
 }
 

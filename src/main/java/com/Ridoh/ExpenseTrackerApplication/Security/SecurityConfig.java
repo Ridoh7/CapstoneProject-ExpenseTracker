@@ -40,11 +40,17 @@ public class SecurityConfig {
                 .sessionManagement((sessionManagement) ->
                         sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize ->
-                        authorize.requestMatchers(HttpMethod.GET, "/api/testing").permitAll()
+                        authorize
+                                .requestMatchers(HttpMethod.GET,"/expenses/**").permitAll()
+                                .requestMatchers(HttpMethod.POST,"/expenses/**").permitAll()
+                                .requestMatchers(HttpMethod.DELETE,"/expenses/**").permitAll()
+                                .requestMatchers(HttpMethod.GET,"/budgets/**").permitAll()
+                                .requestMatchers(HttpMethod.POST,"/budgets/**").permitAll()
+                                .requestMatchers(HttpMethod.PUT,"/expenses/**").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
                                 .requestMatchers(HttpMethod.GET,"/api/users/**").hasAuthority("ADMIN")
                                 .requestMatchers(HttpMethod.PUT,"/api/users/**").permitAll()
-                                .anyRequest().permitAll()
+                                .anyRequest().authenticated()
                 ).httpBasic(Customizer.withDefaults());
         httpSecurity.addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
         return httpSecurity.build();

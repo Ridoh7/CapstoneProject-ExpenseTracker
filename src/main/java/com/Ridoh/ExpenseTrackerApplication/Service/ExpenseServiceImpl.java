@@ -12,6 +12,7 @@ import com.Ridoh.ExpenseTrackerApplication.Repository.CategoryRepository;
 import com.Ridoh.ExpenseTrackerApplication.Repository.ExpenseRepository;
 import com.Ridoh.ExpenseTrackerApplication.Repository.UserRepo;
 import com.Ridoh.ExpenseTrackerApplication.Util.ResponseUtil;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
@@ -97,6 +98,10 @@ public class ExpenseServiceImpl implements ExpenseService {
                 .build();
     }
 
+
+
+
+
     @Override
     public List<Expense> getExpensesByUser(User user) {
         List<Expense> expenses = expenseRepository.findByUser(user);
@@ -134,5 +139,17 @@ public class ExpenseServiceImpl implements ExpenseService {
         Double totalAmount = expenseRepository.sumExpensesAmountByUser(user);
         return totalAmount != null ? totalAmount : 0.0;
     }
+
+    @Override
+    public Response deleteExpenseById(Long expenseId) {
+        Expense expense = expenseRepository.findById(expenseId).orElseThrow(()-> new EntityNotFoundException("Expense not Found" +
+                "with ID: " + expenseId));
+        expenseRepository.delete(expense);
+        return Response.builder()
+                .responseCode(ResponseUtil.EXPENSE_DELETE_CODE)
+                .responseMessage(ResponseUtil.EXPENSE_DELETE_MESSAGE)
+                .data(null).build();
+    }
 }
+
 

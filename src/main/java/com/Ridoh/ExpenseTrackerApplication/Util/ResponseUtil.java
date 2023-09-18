@@ -4,7 +4,7 @@ import java.util.Random;
 
 public class ResponseUtil {
     public static final String USER_EXIST_CODE="001";
-    public static final String USER_EXIST_MESSAGE="User provided email already exist";
+    public static final String USER_EXIST_MESSAGE="User provided email or username already exist";
     public static final String USER_SUCCESS_CODE="002";
     public static final String USER_UPDATE_CODE="006";
     public static final String BUDGET_SUCCESS_CODE="003";
@@ -32,4 +32,6 @@ public class ResponseUtil {
     public static final String EXPENSE_WARNING_CODE="008";
     public static final String EXPENSE_WARNING_MESSAGE="Expense amount exceeds remaining budget for this category, " +
             "kindly update your budget";
+    public static final String EXPENSE_DELETE_CODE="014";
+    public static final String EXPENSE_DELETE_MESSAGE="Expense deleted successfully";
 }

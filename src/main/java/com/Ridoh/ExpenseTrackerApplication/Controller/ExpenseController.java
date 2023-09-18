@@ -6,6 +6,7 @@ import com.Ridoh.ExpenseTrackerApplication.Entity.Expense;
 import com.Ridoh.ExpenseTrackerApplication.Entity.User;
 import com.Ridoh.ExpenseTrackerApplication.Service.ExpenseService;
 import com.Ridoh.ExpenseTrackerApplication.Service.UserService;
+import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
@@ -102,5 +103,18 @@ public class ExpenseController {
         user.setId(userId);
         Double totalAmountSpent = expenseService.getTotalAmountSpentByUser(user);
         return ResponseEntity.ok(totalAmountSpent);
+    }
+
+    @DeleteMapping("/{expenseId}")
+    public ResponseEntity<String> deleteExpense(@PathVariable Long expenseId) {
+        try {
+            expenseService.deleteExpenseById(expenseId);
+            return ResponseEntity.ok("Expense deleted successfully");
+        } catch (EntityNotFoundException e) {
+            return ResponseEntity.notFound().build();
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to delete the expense");
+        }
     }
 }

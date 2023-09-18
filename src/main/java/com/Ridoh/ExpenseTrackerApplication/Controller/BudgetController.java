@@ -6,6 +6,7 @@ import com.Ridoh.ExpenseTrackerApplication.Entity.Budget;
 import com.Ridoh.ExpenseTrackerApplication.Entity.Category;
 import com.Ridoh.ExpenseTrackerApplication.Entity.User;
 import com.Ridoh.ExpenseTrackerApplication.Service.BudgetService;
+import com.Ridoh.ExpenseTrackerApplication.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -21,10 +22,12 @@ import java.util.List;
 public class BudgetController {
 
     private final BudgetService budgetService;
+    private final UserService userService;
 
     @Autowired
-    public BudgetController(BudgetService budgetService) {
+    public BudgetController(BudgetService budgetService, UserService userService) {
         this.budgetService = budgetService;
+        this.userService = userService;
     }
 
     @PostMapping("/createBudget")
@@ -88,7 +91,9 @@ public class BudgetController {
         user.setId(userId);
         List<Budget> budgets = budgetService.getBudgetsByCategoryUserOrderByAmountDesc(user);
         return ResponseEntity.ok(budgets);
-    }
+
+}
+
 
     @GetMapping("/user/{userId}/total-amount-budgeted")
     public ResponseEntity<Double> getTotalAmountBudgetedByUser(@PathVariable Long userId) {
