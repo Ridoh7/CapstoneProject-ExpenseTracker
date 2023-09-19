@@ -7,6 +7,7 @@ import com.Ridoh.ExpenseTrackerApplication.Email.Service.EmailService;
 import com.Ridoh.ExpenseTrackerApplication.Email.dto.EmailDetails;
 import com.Ridoh.ExpenseTrackerApplication.Entity.User;
 import com.Ridoh.ExpenseTrackerApplication.Repository.UserRepo;
+import com.Ridoh.ExpenseTrackerApplication.ServiceInterface.UserService;
 import com.Ridoh.ExpenseTrackerApplication.Util.ResponseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -17,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 @Service
-public class UserServiceImpl implements UserService{
+public class UserServiceImpl implements UserService {
     private final UserRepo userRepo;
     @Autowired
     EmailService emailService;

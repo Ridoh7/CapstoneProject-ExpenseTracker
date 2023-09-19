@@ -4,7 +4,7 @@ import com.Ridoh.ExpenseTrackerApplication.DTO.AuthResponse;
 import com.Ridoh.ExpenseTrackerApplication.DTO.LoginDto;
 import com.Ridoh.ExpenseTrackerApplication.DTO.RegisterDto;
 import com.Ridoh.ExpenseTrackerApplication.Security.JwtTokenProvider;
-import com.Ridoh.ExpenseTrackerApplication.Service.AuthService;
+import com.Ridoh.ExpenseTrackerApplication.ServiceInterface.AuthService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -37,6 +37,7 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody RegisterDto registerDto){
         return new ResponseEntity<>(authService.register(registerDto), HttpStatus.CREATED);
+
     }
 
     @Operation(

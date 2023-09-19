@@ -9,6 +9,8 @@ import com.Ridoh.ExpenseTrackerApplication.Entity.User;
 import com.Ridoh.ExpenseTrackerApplication.Repository.RoleRepository;
 import com.Ridoh.ExpenseTrackerApplication.Repository.UserRepo;
 import com.Ridoh.ExpenseTrackerApplication.Security.JwtTokenProvider;
+import com.Ridoh.ExpenseTrackerApplication.ServiceInterface.AuthService;
+import com.Ridoh.ExpenseTrackerApplication.ServiceInterface.CategoryService;
 import com.Ridoh.ExpenseTrackerApplication.Util.ResponseUtil;
 import jakarta.persistence.EntityManager;
 import org.springframework.beans.factory.annotation.Autowired;

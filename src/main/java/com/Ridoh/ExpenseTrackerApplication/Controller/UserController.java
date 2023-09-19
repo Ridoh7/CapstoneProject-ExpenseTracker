@@ -1,10 +1,8 @@
 package com.Ridoh.ExpenseTrackerApplication.Controller;
 import com.Ridoh.ExpenseTrackerApplication.DTO.Response;
 import com.Ridoh.ExpenseTrackerApplication.DTO.UserRequest;
-import com.Ridoh.ExpenseTrackerApplication.Service.UserService;
+import com.Ridoh.ExpenseTrackerApplication.ServiceInterface.UserService;
 import com.Ridoh.ExpenseTrackerApplication.Util.ResponseUtil;
-import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -1,4 +1,4 @@
-package com.Ridoh.ExpenseTrackerApplication.Service;
+package com.Ridoh.ExpenseTrackerApplication.ServiceInterface;
 
 import com.Ridoh.ExpenseTrackerApplication.DTO.*;
 

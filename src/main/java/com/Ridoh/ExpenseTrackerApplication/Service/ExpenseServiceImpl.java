@@ -11,6 +11,7 @@ import com.Ridoh.ExpenseTrackerApplication.Repository.BudgetRepository;
 import com.Ridoh.ExpenseTrackerApplication.Repository.CategoryRepository;
 import com.Ridoh.ExpenseTrackerApplication.Repository.ExpenseRepository;
 import com.Ridoh.ExpenseTrackerApplication.Repository.UserRepo;
+import com.Ridoh.ExpenseTrackerApplication.ServiceInterface.ExpenseService;
 import com.Ridoh.ExpenseTrackerApplication.Util.ResponseUtil;
 import jakarta.persistence.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -4,6 +4,7 @@ import com.Ridoh.ExpenseTrackerApplication.DTO.Response;
 import com.Ridoh.ExpenseTrackerApplication.Entity.Category;
 import com.Ridoh.ExpenseTrackerApplication.Entity.User;
 import com.Ridoh.ExpenseTrackerApplication.Repository.CategoryRepository;
+import com.Ridoh.ExpenseTrackerApplication.ServiceInterface.CategoryService;
 import com.Ridoh.ExpenseTrackerApplication.Util.ResponseUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

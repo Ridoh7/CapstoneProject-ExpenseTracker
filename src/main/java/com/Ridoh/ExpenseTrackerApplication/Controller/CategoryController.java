@@ -3,7 +3,7 @@ import com.Ridoh.ExpenseTrackerApplication.DTO.CategoryRequest;
 import com.Ridoh.ExpenseTrackerApplication.DTO.Response;
 import com.Ridoh.ExpenseTrackerApplication.Entity.Category;
 import com.Ridoh.ExpenseTrackerApplication.Entity.User;
-import com.Ridoh.ExpenseTrackerApplication.Service.CategoryService;
+import com.Ridoh.ExpenseTrackerApplication.ServiceInterface.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
